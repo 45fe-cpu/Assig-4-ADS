@@ -1,5 +1,6 @@
 import algorithms.BFS;
 import algorithms.DFS;
+import algorithms.SocialReachability;
 import graph.Graph;
 import graph.GraphType;
 
@@ -7,27 +8,36 @@ public class Main {
     public static void main(String[] args) {
         Graph g = new Graph(GraphType.UNDIRECTED, false);
 
-        g.addEdge("0", "1");
-        g.addEdge("0", "2");
-        g.addEdge("1", "3");
-        g.addEdge("2", "3");
-        g.addEdge("3", "4");
-        g.addEdge("4", "5");
-        g.addEdge("2", "5"); // цикл есть
+        // Friendship graph example
+        g.addEdge("A", "B");
+        g.addEdge("A", "C");
+        g.addEdge("B", "D");
+        g.addEdge("C", "D");
+        g.addEdge("D", "E");
+        g.addEdge("E", "F");
+        g.addEdge("C", "F");
 
-        var bfs = BFS.run(g, "0");
         System.out.println("V = " + g.vertexCount());
         System.out.println("E(logical) = " + g.edgeCountLogical());
-        System.out.println("BFS order: " + bfs.order);
-        System.out.println("Shortest 0->5: " + BFS.shortestPathUnweighted(g, "0", "5"));
 
-        var dfsRec = DFS.recursive(g, "0");
-        System.out.println("DFS recursive: " + dfsRec.order);
+        // Part B: BFS demo
+        var bfs = BFS.run(g, "A");
+        System.out.println("BFS order from A: " + bfs.order);
+        System.out.println("Shortest A->F: " + BFS.shortestPathUnweighted(g, "A", "F"));
 
-        var dfsIt = DFS.iterative(g, "0");
-        System.out.println("DFS iterative: " + dfsIt.order);
+        // Part C: DFS demo
+        var dfsRec = DFS.recursive(g, "A");
+        System.out.println("DFS recursive from A: " + dfsRec.order);
+
+        var dfsIt = DFS.iterative(g, "A");
+        System.out.println("DFS iterative from A: " + dfsIt.order);
 
         System.out.println("Connected components: " + DFS.connectedComponentsUndirected(g));
         System.out.println("Has cycle (undirected): " + DFS.hasCycleUndirected(g));
+
+        // Part D: Social reachability
+        var social = SocialReachability.run(g, "A", "F");
+        System.out.println("People within distance <= 2 from A: " + social.withinDistance2);
+        System.out.println("Shortest path A->F: " + social.shortestPathToTarget);
     }
 }
